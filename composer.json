@@ -1,0 +1,12 @@
+{
+    "name": "braian-baldino/parcial1",
+    "authors": [
+        {
+            "name": "Braian Baldino",
+            "email": "baldino.bab@hotmail.com"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "^5.2"
+    }
+}
