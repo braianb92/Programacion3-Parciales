@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 30-06-2020 a las 23:18:20
--- Versión del servidor: 10.4.8-MariaDB
--- Versión de PHP: 7.3.11
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 01-07-2020 a las 02:47:41
+-- Versión del servidor: 10.4.11-MariaDB
+-- Versión de PHP: 7.4.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -21,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `parcial2`
 --
-CREATE DATABASE IF NOT EXISTS `parcial2` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `parcial2`;
 
 -- --------------------------------------------------------
 
@@ -37,6 +34,15 @@ CREATE TABLE `inscriptos` (
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `inscriptos`
+--
+
+INSERT INTO `inscriptos` (`id`, `alumno_id`, `materia_id`, `date`) VALUES
+(1, 3, 2, '0000-00-00 00:00:00'),
+(2, 3, 1, '2020-07-01 05:26:19'),
+(3, 3, 1, '2020-07-01 05:39:48');
+
 -- --------------------------------------------------------
 
 --
@@ -50,6 +56,14 @@ CREATE TABLE `materias` (
   `vacantes` int(11) NOT NULL,
   `profesor_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `materias`
+--
+
+INSERT INTO `materias` (`id`, `materia`, `cuatrimestre`, `vacantes`, `profesor_id`) VALUES
+(1, 'Matematicas', 1, 28, 4),
+(2, 'Programacion 2', 2, 29, 4);
 
 -- --------------------------------------------------------
 
@@ -87,6 +101,16 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `nombre`, `clave`, `tipo_id`, `legajo`) VALUES
+(1, 'braian@test.com', 'Braian', '1234', 3, 1000),
+(3, 'juan@test.com', 'Juan', '1234', 1, 1001),
+(4, 'marcos@test.com', 'Marcos', '1234', 2, 1002),
+(7, 'marta@test.com', 'Marta', '1234', 2, 1003);
+
+--
 -- Índices para tablas volcadas
 --
 
@@ -94,13 +118,16 @@ CREATE TABLE `users` (
 -- Indices de la tabla `inscriptos`
 --
 ALTER TABLE `inscriptos`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `alumno_id` (`alumno_id`,`materia_id`),
+  ADD KEY `materia_id` (`materia_id`);
 
 --
 -- Indices de la tabla `materias`
 --
 ALTER TABLE `materias`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `profesor_id` (`profesor_id`);
 
 --
 -- Indices de la tabla `tipos`
@@ -112,7 +139,11 @@ ALTER TABLE `tipos`
 -- Indices de la tabla `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `legajo` (`legajo`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `tipo_id` (`tipo_id`),
+  ADD KEY `tipo_id_2` (`tipo_id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -122,13 +153,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `inscriptos`
 --
 ALTER TABLE `inscriptos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `materias`
 --
 ALTER TABLE `materias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos`
@@ -140,7 +171,30 @@ ALTER TABLE `tipos`
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `inscriptos`
+--
+ALTER TABLE `inscriptos`
+  ADD CONSTRAINT `inscriptos_ibfk_1` FOREIGN KEY (`materia_id`) REFERENCES `materias` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `inscriptos_ibfk_2` FOREIGN KEY (`alumno_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `materias`
+--
+ALTER TABLE `materias`
+  ADD CONSTRAINT `materias_ibfk_1` FOREIGN KEY (`profesor_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`tipo_id`) REFERENCES `tipos` (`id`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
