@@ -72,6 +72,16 @@ class MateriasController {
         return $response;
     }
 
+    //PUNTO 7
+    public function getAll(Request $request, Response $response, $args)
+    {   
+        $rta = json_encode(Materia::all());
+
+        $response->getBody()->write($rta);
+
+        return $response;
+    }
+
 
     
 }

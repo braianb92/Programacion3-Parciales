@@ -31,8 +31,8 @@ return function ($app) {
         //SOLO ALUMNO
         $group->put('/{id}', InscriptosController::class . ':inscribir')->add(JwtMiddleware::class);
 
-        // //PUNTO 7
-        // $group->get('[/]', MateriasController::class . ':')->add(JwtMiddleware::class);
+        //PUNTO 7
+        $group->get('[/]', MateriasController::class . ':getAll')->add(JwtMiddleware::class);
         
     });
 };
